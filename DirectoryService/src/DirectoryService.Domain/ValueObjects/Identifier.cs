@@ -12,7 +12,7 @@ public record Identifier
 
     private Identifier(string path) => Value = path;
 
-    public string Value { get; private set; }
+    public string Value { get; }
 
     public static Result<Identifier, Error> Create(string identifier)
     {

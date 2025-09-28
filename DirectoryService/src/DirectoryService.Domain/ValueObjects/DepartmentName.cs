@@ -10,7 +10,7 @@ public record DepartmentName
 
     private DepartmentName(string path) => Value = path;
 
-    public string Value { get; private set; }
+    public string Value { get; }
 
 
     public Result<DepartmentName, Error> Create(string name)

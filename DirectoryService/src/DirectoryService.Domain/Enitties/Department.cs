@@ -11,7 +11,7 @@ namespace DirectoryService.Domain.Enitties;
 /// </summary>
 public class Department
 {
-    private List<DepartmentLocation>? _departmentLocations;
+    private readonly List<DepartmentLocation>? _departmentLocations;
 
     private List<DepartmentPosition>? _departmentPositions;
 
@@ -22,7 +22,8 @@ public class Department
         DepartmentPath path,
         short depth,
         bool isActive,
-        DateTime createdAt)
+        DateTime createdAt,
+        IEnumerable<DepartmentLocation> departmentLocations)
     {
         Id = id;
         Name = name;
@@ -32,6 +33,7 @@ public class Department
         Path = path;
         IsActive = isActive;
         CreatedAt = createdAt;
+        _departmentLocations = departmentLocations.ToList();
     }
 
     public Guid Id { get; }
@@ -48,7 +50,8 @@ public class Department
 
     public IReadOnlyList<DepartmentLocation>? DepartmentLocations => _departmentLocations;
 
-    public static Result<Department, Error> Create(Department? parent, DepartmentName name, Identifier identifier)
+    public static Result<Department, Error> Create(Department? parent, DepartmentName name, Identifier identifier,
+        IEnumerable<DepartmentLocation> departmentLocations)
     {
         DateTime createdAt = DateTime.Now;
 
@@ -63,7 +66,15 @@ public class Department
             return departmentPath.Error;
         }
 
-        return new Department(Guid.NewGuid(), name, identifier, parent, departmentPath.Value, depth, true, createdAt);
+        return new Department(Guid.NewGuid(),
+            name,
+            identifier,
+            parent,
+            departmentPath.Value,
+            depth,
+            true,
+            createdAt,
+            departmentLocations);
     }
 
     public void AddPosition(IEnumerable<Position> positions)

@@ -14,7 +14,7 @@ public record Timezone
 
     private Timezone(string name) => Value = name;
 
-    public string Value { get; private set; }
+    public string Value { get; }
 
     public Result<Timezone, Error> Create(string name)
     {

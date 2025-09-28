@@ -12,7 +12,7 @@ public record Address
 
     private Address(string name) => Value = name;
 
-    public string Value { get; private set; }
+    public string Value { get; }
 
     public Result<Address, Error> Create(string name)
     {
