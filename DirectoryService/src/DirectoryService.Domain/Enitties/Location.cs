@@ -1,9 +1,12 @@
-﻿using DirectoryService.Domain.ValueObjects;
+﻿using CSharpFunctionalExtensions;
+using DirectoryService.Domain.Shared.Errors;
+using DirectoryService.Domain.ValueObjects;
 
 namespace DirectoryService.Domain.Enitties;
 
 public class Location
 {
+    private readonly List<DepartmentLocation> _departmentLocations;
     private Location() { }
 
     private Location(Guid id, LocationName name, Address address, Timezone timezone)
@@ -24,11 +27,19 @@ public class Location
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
+    public IReadOnlyList<DepartmentLocation>? DepartmentLocations => _departmentLocations;
+
     public static Location Create(LocationName name, Address address, Timezone timezone)
     {
         Guid id = Guid.NewGuid();
 
         return new Location(id, name, address, timezone);
+    }
+
+    public UnitResult<Error> AddDepartmentLocation(DepartmentLocation departmentLocation)
+    {
+        _departmentLocations.Add(departmentLocation);
+        return UnitResult.Success<Error>();
     }
 
     public void Delete()

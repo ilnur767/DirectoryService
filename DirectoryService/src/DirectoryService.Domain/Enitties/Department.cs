@@ -36,6 +36,8 @@ public class Department
         _departmentLocations = departmentLocations.ToList();
     }
 
+    private Department() { }
+
     public Guid Id { get; }
     public DepartmentName Name { get; private set; }
     public Identifier Identifier { get; private set; }

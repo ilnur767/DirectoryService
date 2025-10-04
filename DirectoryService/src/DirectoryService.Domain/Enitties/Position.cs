@@ -15,9 +15,7 @@ public class Position
 
     private List<DepartmentPosition> _departmentPositions;
 
-    private Position()
-    {
-    }
+    private Position() { }
 
     private Position(string name, string? description, IEnumerable<DepartmentPosition> departmentPositions)
     {

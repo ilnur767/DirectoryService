@@ -1,21 +1,19 @@
 using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Shared.Errors;
+using static DirectoryService.Domain.Constants.DepartmentConstants;
 
 namespace DirectoryService.Domain.ValueObjects;
 
 public record DepartmentName
 {
-    private const int MIN_LENGTH = 3;
-    private const int MAX_LENGTH = 150;
-
-    private DepartmentName(string path) => Value = path;
-
+    private DepartmentName(string value) => Value = value;
+    private DepartmentName() { }
     public string Value { get; }
 
 
     public Result<DepartmentName, Error> Create(string name)
     {
-        if (name.Length < MIN_LENGTH || name.Length > MAX_LENGTH)
+        if (name.Length < NAME_MIN_LENGTH || name.Length > NAME_MAX_LENGTH)
         {
             return Errors.General.ValueIsInvalid(nameof(DepartmentName));
         }
