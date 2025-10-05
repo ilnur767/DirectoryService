@@ -1,22 +1,22 @@
 using System.Text.RegularExpressions;
 using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Shared.Errors;
+using static DirectoryService.Domain.Constants.DepartmentConstants;
 
 namespace DirectoryService.Domain.ValueObjects;
 
 public record Identifier
 {
-    private const int MIN_LENGTH = 3;
-    private const int MAX_LENGTH = 150;
     private const string PATTERN = "^[A-Za-z]$";
 
-    private Identifier(string path) => Value = path;
+    private Identifier(string value) => Value = value;
+    private Identifier() { }
 
     public string Value { get; }
 
     public static Result<Identifier, Error> Create(string identifier)
     {
-        if (identifier.Length < MIN_LENGTH || identifier.Length > MAX_LENGTH)
+        if (identifier.Length < IDENTIFIER_MIN_LENGTH || identifier.Length > IDENTIFIER_MAX_LENGTH)
         {
             return Errors.General.ValueIsInvalid(nameof(DepartmentName));
         }

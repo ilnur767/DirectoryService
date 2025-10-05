@@ -8,8 +8,8 @@ public record DepartmentPath
 {
     private const string PATTERN = @"^[a-z]+(\.[a-z0-9-]+)*$";
 
-    private DepartmentPath(string path) => Value = path;
-
+    private DepartmentPath(string value) => Value = value;
+    private DepartmentPath() { }
     public string Value { get; }
 
     public static Result<DepartmentPath, Error> Create(string path)
