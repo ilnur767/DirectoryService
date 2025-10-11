@@ -14,14 +14,14 @@ public record Timezone
     private Timezone() { }
     public string Value { get; }
 
-    public Result<Timezone, Error> Create(string name)
+    public static Result<Timezone, Error> Create(string name)
     {
         if (name.Length < TIMEZONE_MIN_LENGTH || name.Length > TIMEZONE_MAX_LENGTH)
         {
             return Errors.General.ValueIsInvalid(nameof(Timezone));
         }
 
-        if (Regex.IsMatch(name, PATTERN))
+        if (!Regex.IsMatch(name, PATTERN))
         {
             return Errors.General.ValueIsInvalid(nameof(Timezone));
         }

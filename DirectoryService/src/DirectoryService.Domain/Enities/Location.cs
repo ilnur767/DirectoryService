@@ -2,7 +2,7 @@
 using DirectoryService.Domain.Shared.Errors;
 using DirectoryService.Domain.ValueObjects;
 
-namespace DirectoryService.Domain.Enitties;
+namespace DirectoryService.Domain.Enities;
 
 public class Location
 {
@@ -31,7 +31,7 @@ public class Location
 
     public static Location Create(LocationName name, Address address, Timezone timezone)
     {
-        Guid id = Guid.NewGuid();
+        var id = Guid.NewGuid();
 
         return new Location(id, name, address, timezone);
     }

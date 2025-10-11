@@ -1,4 +1,4 @@
-﻿using DirectoryService.Domain.Enitties;
+﻿using DirectoryService.Domain.Enities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

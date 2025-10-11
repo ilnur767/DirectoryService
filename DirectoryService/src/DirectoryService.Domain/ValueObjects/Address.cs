@@ -15,14 +15,14 @@ public record Address
 
     public string Value { get; }
 
-    public Result<Address, Error> Create(string name)
+    public static Result<Address, Error> Create(string name)
     {
         if (name.Length < ADDRESS_MIN_LENGTH || name.Length > ADDRESS_MAX_LENGTH)
         {
             return Errors.General.ValueIsInvalid(nameof(Address));
         }
 
-        if (Regex.IsMatch(name, PATTERN))
+        if (!Regex.IsMatch(name, PATTERN))
         {
             return Errors.General.ValueIsInvalid(nameof(Address));
         }
