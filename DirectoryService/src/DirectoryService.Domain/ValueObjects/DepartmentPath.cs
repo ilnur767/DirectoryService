@@ -14,7 +14,7 @@ public record DepartmentPath
 
     public static Result<DepartmentPath, Error> Create(string path)
     {
-        if (Regex.IsMatch(path, PATTERN))
+        if (!Regex.IsMatch(path, PATTERN))
         {
             return Errors.General.ValueIsInvalid(nameof(DepartmentPath));
         }

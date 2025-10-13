@@ -12,7 +12,7 @@ public record LocationName
     private LocationName() { }
     public string Value { get; }
 
-    public Result<LocationName, Error> Create(string name)
+    public static Result<LocationName, Error> Create(string name)
     {
         if (name.Length < NAME_MIN_LENGTH || name.Length > NAME_MAX_LENGTH)
         {

@@ -1,4 +1,4 @@
-﻿using DirectoryService.Domain.Enitties;
+﻿using DirectoryService.Domain.Enities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

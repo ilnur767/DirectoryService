@@ -1,7 +1,7 @@
 using CSharpFunctionalExtensions;
 using DirectoryService.Domain.Shared.Errors;
 
-namespace DirectoryService.Domain.Enitties;
+namespace DirectoryService.Domain.Enities;
 
 /// <summary>
 ///     Представляет должность (Position) сотрудника.
@@ -44,13 +44,13 @@ public class Position
     public static Result<Position, Error> Create(string name, string? description,
         IEnumerable<DepartmentPosition> departmentPositions)
     {
-        UnitResult<Error> nameResult = CheckName(name);
+        var nameResult = CheckName(name);
         if (nameResult.IsFailure)
         {
             return nameResult.Error;
         }
 
-        UnitResult<Error> postionResult = CheckDescription(name);
+        var postionResult = CheckDescription(name);
         if (postionResult.IsFailure)
         {
             return postionResult.Error;
@@ -81,7 +81,7 @@ public class Position
 
     public UnitResult<Error> UpdateName(string name)
     {
-        UnitResult<Error> result = CheckName(name);
+        var result = CheckName(name);
         if (result.IsFailure)
         {
             return result.Error;
@@ -95,7 +95,7 @@ public class Position
 
     public UnitResult<Error> UpdateDescription(string description)
     {
-        UnitResult<Error> result = CheckDescription(description);
+        var result = CheckDescription(description);
         if (result.IsFailure)
         {
             return result.Error;

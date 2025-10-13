@@ -21,7 +21,7 @@ public record Identifier
             return Errors.General.ValueIsInvalid(nameof(DepartmentName));
         }
 
-        if (Regex.IsMatch(identifier, PATTERN))
+        if (!Regex.IsMatch(identifier, PATTERN))
         {
             return Errors.General.ValueIsInvalid(nameof(Identifier));
         }

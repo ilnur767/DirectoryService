@@ -2,7 +2,7 @@
 using DirectoryService.Domain.Shared.Errors;
 using DirectoryService.Domain.ValueObjects;
 
-namespace DirectoryService.Domain.Enitties;
+namespace DirectoryService.Domain.Enities;
 
 /// <summary>
 ///     Представляет подразделение организации.
@@ -55,13 +55,13 @@ public class Department
     public static Result<Department, Error> Create(Department? parent, DepartmentName name, Identifier identifier,
         IEnumerable<DepartmentLocation> departmentLocations)
     {
-        DateTime createdAt = DateTime.Now;
+        var createdAt = DateTime.Now;
 
-        short depth = (short)(parent == null ? 0 : parent.Depth + 1);
+        var depth = (short)(parent == null ? 0 : parent.Depth + 1);
 
-        string path = parent == null ? identifier.Value : $"{identifier.Value}{parent.Path}";
+        var path = parent == null ? identifier.Value : $"{identifier.Value}{parent.Path}";
 
-        Result<DepartmentPath, Error> departmentPath = DepartmentPath.Create(path);
+        var departmentPath = DepartmentPath.Create(path);
 
         if (departmentPath.IsFailure)
         {
@@ -81,7 +81,7 @@ public class Department
 
     public void AddPosition(IEnumerable<Position> positions)
     {
-        List<DepartmentPosition> departmentPositions =
+        var departmentPositions =
             positions.Select(p => new DepartmentPosition(this, p, Id, p.Id)).ToList();
 
         _departmentPositions.AddRange(departmentPositions);
@@ -89,7 +89,7 @@ public class Department
 
     public void AddLocation(IEnumerable<Location> locations)
     {
-        List<DepartmentLocation> departmentLocations =
+        var departmentLocations =
             locations.Select(l => new DepartmentLocation(this, l, Id, l.Id)).ToList();
 
         _departmentLocations.AddRange(departmentLocations);
@@ -103,11 +103,11 @@ public class Department
 
     public UnitResult<Error> UpdateIdentifier(Identifier identifier)
     {
-        string path = Parent == null
+        var path = Parent == null
             ? identifier.Value
             : $"{Parent.Path}.{identifier.Value}";
 
-        Result<DepartmentPath, Error> departmentPath = DepartmentPath.Create(path);
+        var departmentPath = DepartmentPath.Create(path);
         if (departmentPath.IsFailure)
         {
             return departmentPath.Error;
@@ -131,12 +131,12 @@ public class Department
 
         Parent = parent;
 
-        short depth = (short)(parent.Depth + 1);
+        var depth = (short)(parent.Depth + 1);
         Depth = depth;
 
-        string path = $"{parent.Path}.{Identifier.Value}";
+        var path = $"{parent.Path}.{Identifier.Value}";
 
-        Result<DepartmentPath, Error> departmentPath = DepartmentPath.Create(path);
+        var departmentPath = DepartmentPath.Create(path);
         if (departmentPath.IsFailure)
         {
             return departmentPath.Error;

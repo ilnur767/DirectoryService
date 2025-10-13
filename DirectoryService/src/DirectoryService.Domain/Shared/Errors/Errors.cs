@@ -9,23 +9,30 @@ public static class Errors
     {
         public static Error ValueIsInvalid(string? name = null)
         {
-            string label = name ?? "value";
+            var label = name ?? "value";
 
             return Error.Validation(INVALID_VALUE_CODE, $"{label} is invalid");
         }
 
         public static Error NotFound(Guid? id = null)
         {
-            string forId = id == null ? "" : $" for Id '{id}'";
+            var forId = id == null ? "" : $" for Id '{id}'";
 
             return Error.NotFound(RECORD_NOT_FOUND_CODE, $"record not found{forId}");
         }
+
+        public static Error SaveFailed(Guid? id = null)
+        {
+            var forId = id == null ? "" : $" for Id '{id}'";
+            return Error.Failure("save.failed", $"Failed to save entity{forId} to database");
+        }
+
 
         public static Error NotFound(string message) => Error.NotFound(RECORD_NOT_FOUND_CODE, message);
 
         public static Error ValueIsRequired(string? name = null)
         {
-            string label = name == null ? "" : " " + name + " ";
+            var label = name == null ? "" : " " + name + " ";
 
             return Error.Validation(INVALID_VALUE_CODE, $"invalid{label}length");
         }
