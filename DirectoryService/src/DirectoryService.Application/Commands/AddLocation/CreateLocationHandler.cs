@@ -23,18 +23,24 @@ public class CreateLocationHandler : ICommandHandler<Guid, AddLocationCommand>
         var address = Address.Create(command.Address);
         if (address.IsFailure)
         {
+            _logger.LogError("Location address validation failed: {error}", address.Error);
+
             return address.Error.ToErrorList();
         }
 
         var locationName = LocationName.Create(command.Name);
         if (locationName.IsFailure)
         {
+            _logger.LogError("Location name validation failed: {error}", locationName.Error);
+
             return locationName.Error.ToErrorList();
         }
 
         var timeZone = Timezone.Create(command.TimeZone);
         if (timeZone.IsFailure)
         {
+            _logger.LogError("Location timezone validation failed: {error}", timeZone.Error);
+
             return timeZone.Error.ToErrorList();
         }
 
@@ -43,10 +49,12 @@ public class CreateLocationHandler : ICommandHandler<Guid, AddLocationCommand>
         var result = await _locationRepository.CreateLocation(location, cancellationToken);
         if (result.IsFailure)
         {
+            _logger.LogError("Location timezone validation failed: {error}", result.Error);
+
             return result.Error.ToErrorList();
         }
 
-        _logger.LogInformation("Created location with name '{name}'", command.Name);
+        _logger.LogInformation("Created location with id '{id}'", result.Value);
         return location.Id;
     }
 }
