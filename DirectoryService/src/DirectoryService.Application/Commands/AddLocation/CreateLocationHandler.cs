@@ -3,14 +3,20 @@ using DirectoryService.Application.Abstractions;
 using DirectoryService.Domain.Enities;
 using DirectoryService.Domain.Shared.Errors;
 using DirectoryService.Domain.ValueObjects;
+using Microsoft.Extensions.Logging;
 
 namespace DirectoryService.Application.Commands.AddLocation;
 
 public class CreateLocationHandler : ICommandHandler<Guid, AddLocationCommand>
 {
     private readonly ILocationRepository _locationRepository;
+    private readonly ILogger<CreateLocationHandler> _logger;
 
-    public CreateLocationHandler(ILocationRepository locationRepository) => _locationRepository = locationRepository;
+    public CreateLocationHandler(ILocationRepository locationRepository, ILogger<CreateLocationHandler> logger)
+    {
+        _locationRepository = locationRepository;
+        _logger = logger;
+    }
 
     public async Task<Result<Guid, ErrorList>> Handle(AddLocationCommand command, CancellationToken cancellationToken)
     {
@@ -40,6 +46,7 @@ public class CreateLocationHandler : ICommandHandler<Guid, AddLocationCommand>
             return result.Error.ToErrorList();
         }
 
+        _logger.LogInformation("Created location with name '{name}'", command.Name);
         return location.Id;
     }
 }

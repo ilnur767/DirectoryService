@@ -4,6 +4,7 @@ public static class Errors
 {
     public const string INVALID_VALUE_CODE = "value.is.invalid";
     public const string RECORD_NOT_FOUND_CODE = "record.not.found";
+    public const string INTERNAL_SERVER_ERROR_CODE = "server.internal";
 
     public static class General
     {
