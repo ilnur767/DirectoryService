@@ -8,8 +8,13 @@ namespace DirectoryService.Infrastructure;
 public class DirectoryServiceDbContext : DbContext
 {
     private readonly IConfiguration _configuration;
+    private readonly ILoggerFactory _loggerFactory;
 
-    public DirectoryServiceDbContext(IConfiguration configuration) => _configuration = configuration;
+    public DirectoryServiceDbContext(IConfiguration configuration, ILoggerFactory loggerFactory)
+    {
+        _configuration = configuration;
+        _loggerFactory = loggerFactory;
+    }
 
     public DbSet<Department> Departments { get; set; }
 
@@ -21,8 +26,6 @@ public class DirectoryServiceDbContext : DbContext
         optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DirectoryServiceDb"));
         optionsBuilder.EnableDetailedErrors();
         optionsBuilder.EnableSensitiveDataLogging();
-        optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+        optionsBuilder.UseLoggerFactory(_loggerFactory);
     }
-
-    private ILoggerFactory CreateLoggerFactory() => LoggerFactory.Create(builder => { builder.AddConsole(); });
 }
