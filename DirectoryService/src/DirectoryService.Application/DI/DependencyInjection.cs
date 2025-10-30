@@ -1,4 +1,5 @@
 ﻿using DirectoryService.Application.Abstractions;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DirectoryService.Application.DI;
@@ -28,6 +29,11 @@ public static class DependencyInjection
             )
             .AsSelfWithInterfaces()
             .WithScopedLifetime());
+
+        services.AddValidatorsFromAssembly(assembly);
+
+        services.Decorate(typeof(ICommandHandler<,>), typeof(CommandValidationDecorator<,>));
+        //services.Decorate(typeof(IQueryHandler<,>), typeof(QueryValidationDecorator<,>));
 
         return services;
     }

@@ -1,4 +1,5 @@
 ﻿using DirectoryService.Domain.Enities;
+using DirectoryService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static DirectoryService.Domain.Constants.LocationConstants;
@@ -13,21 +14,21 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 
         builder.HasKey(l => l.Id);
 
-        builder.ComplexProperty(l => l.Name, p =>
-        {
-            p.Property(l => l.Value)
-                .HasColumnName("name")
-                .HasMaxLength(NAME_MAX_LENGTH)
-                .IsRequired();
-        });
+        builder.Property(l => l.Name)
+            .HasConversion(d => d.Value, v => LocationName.Create(v).Value)
+            .HasColumnName("name")
+            .HasMaxLength(NAME_MAX_LENGTH)
+            .IsRequired();
 
-        builder.ComplexProperty(l => l.Address, p =>
-        {
-            p.Property(l => l.Value)
-                .HasColumnName("address")
-                .HasMaxLength(ADDRESS_MAX_LENGTH)
-                .IsRequired();
-        });
+        builder.HasIndex(b => b.Name).IsUnique();
+
+        builder.Property(l => l.Address)
+            .HasConversion(d => d.Value, v => Address.Create(v).Value)
+            .HasColumnName("address")
+            .HasMaxLength(ADDRESS_MAX_LENGTH)
+            .IsRequired();
+
+        builder.HasIndex(b => b.Address).IsUnique();
 
         builder.ComplexProperty(l => l.Timezone, p =>
         {
