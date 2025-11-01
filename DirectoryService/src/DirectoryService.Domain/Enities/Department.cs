@@ -52,14 +52,18 @@ public class Department
 
     public IReadOnlyList<DepartmentLocation>? DepartmentLocations => _departmentLocations;
 
-    public static Result<Department, Error> Create(Department? parent, DepartmentName name, Identifier identifier,
+    public static Result<Department, Error> Create(
+        Guid departmentId,
+        Department? parent,
+        DepartmentName name,
+        Identifier identifier,
         IEnumerable<DepartmentLocation> departmentLocations)
     {
-        var createdAt = DateTime.Now;
+        var createdAt = DateTime.UtcNow;
 
         var depth = (short)(parent == null ? 0 : parent.Depth + 1);
 
-        var path = parent == null ? identifier.Value : $"{identifier.Value}{parent.Path}";
+        var path = parent == null ? identifier.Value : $"{parent.Path.Value}.{identifier.Value}";
 
         var departmentPath = DepartmentPath.Create(path);
 
@@ -68,7 +72,8 @@ public class Department
             return departmentPath.Error;
         }
 
-        return new Department(Guid.NewGuid(),
+        return new Department(
+            departmentId,
             name,
             identifier,
             parent,

@@ -10,6 +10,10 @@ public class DirectoryServiceDbContext : DbContext
     private readonly IConfiguration _configuration;
     private readonly ILoggerFactory _loggerFactory;
 
+    public DirectoryServiceDbContext()
+    {
+    }
+
     public DirectoryServiceDbContext(IConfiguration configuration, ILoggerFactory loggerFactory)
     {
         _configuration = configuration;
@@ -17,6 +21,9 @@ public class DirectoryServiceDbContext : DbContext
     }
 
     public DbSet<Department> Departments { get; set; }
+    public DbSet<Location> Locations { get; set; }
+
+    public DbSet<Position> Positions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DirectoryServiceDbContext).Assembly);

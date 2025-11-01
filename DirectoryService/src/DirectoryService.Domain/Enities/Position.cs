@@ -17,9 +17,9 @@ public class Position
 
     private Position() { }
 
-    private Position(string name, string? description, IEnumerable<DepartmentPosition> departmentPositions)
+    private Position(Guid id, string name, string? description, IEnumerable<DepartmentPosition> departmentPositions)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Name = name;
         Description = description;
         IsActive = true;
@@ -41,7 +41,7 @@ public class Position
         private set => _departmentPositions = value.ToList();
     }
 
-    public static Result<Position, Error> Create(string name, string? description,
+    public static Result<Position, Error> Create(Guid id, string name, string? description,
         IEnumerable<DepartmentPosition> departmentPositions)
     {
         var nameResult = CheckName(name);
@@ -56,7 +56,7 @@ public class Position
             return postionResult.Error;
         }
 
-        return new Position(name, description, departmentPositions);
+        return new Position(id, name, description, departmentPositions);
     }
 
     private static UnitResult<Error> CheckName(string name)

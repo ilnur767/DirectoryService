@@ -11,7 +11,7 @@ public record DepartmentName
     public string Value { get; }
 
 
-    public Result<DepartmentName, Error> Create(string name)
+    public static Result<DepartmentName, Error> Create(string name)
     {
         if (name.Length < NAME_MIN_LENGTH || name.Length > NAME_MAX_LENGTH)
         {

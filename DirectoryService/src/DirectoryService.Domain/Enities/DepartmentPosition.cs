@@ -11,6 +11,13 @@ public class DepartmentPosition
         Id = Guid.NewGuid();
     }
 
+    public DepartmentPosition(Guid departmentId, Guid positionId)
+    {
+        DepartmentId = departmentId;
+        PositionId = positionId;
+        Id = Guid.NewGuid();
+    }
+
     public DepartmentPosition() { }
 
     public Guid Id { get; private set; }

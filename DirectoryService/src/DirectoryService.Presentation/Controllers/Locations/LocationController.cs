@@ -1,22 +1,22 @@
 ﻿using DirectoryService.Application.Abstractions;
-using DirectoryService.Application.Commands.AddLocation;
+using DirectoryService.Application.Commands.Locations.CreateLocation;
 using DirectoryService.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DirectoryService.Presentation.Controllers;
+namespace DirectoryService.Presentation.Controllers.Locations;
 
 [ApiController]
 [Route("api/location")]
 public class LocationController : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> AddLocation(
+    public async Task<IActionResult> CreateLocation(
         [FromBody] LocationRequest location,
-        [FromServices] ICommandHandler<Guid, AddLocationCommand> handler,
+        [FromServices] ICommandHandler<Guid, CreateLocationCommand> handler,
         CancellationToken cancellationToken)
     {
         var result =
-            await handler.Handle(new AddLocationCommand(location.Name, location.Address, location.TimeZone),
+            await handler.Handle(new CreateLocationCommand(location.Name, location.Address, location.TimeZone),
                 cancellationToken);
 
         if (result.IsFailure)
