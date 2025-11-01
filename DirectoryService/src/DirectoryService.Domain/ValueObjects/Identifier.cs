@@ -7,7 +7,7 @@ namespace DirectoryService.Domain.ValueObjects;
 
 public record Identifier
 {
-    private const string PATTERN = "^[A-Za-z]$";
+    private const string PATTERN = "^[A-Za-z]+$";
 
     private Identifier(string value) => Value = value;
     private Identifier() { }

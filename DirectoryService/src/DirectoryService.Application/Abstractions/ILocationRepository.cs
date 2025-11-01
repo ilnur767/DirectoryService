@@ -7,4 +7,5 @@ namespace DirectoryService.Application.Abstractions;
 public interface ILocationRepository
 {
     Task<Result<Guid, Error>> CreateLocation(Location location, CancellationToken cancellationToken);
+    Task<Result<bool, Error>> CheckIfAllLocationsExist(Guid[] ids, CancellationToken cancellationToken);
 }

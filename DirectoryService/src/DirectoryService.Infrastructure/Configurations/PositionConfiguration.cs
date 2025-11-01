@@ -16,6 +16,8 @@ public class PositionConfiguration : IEntityTypeConfiguration<Position>
             .HasMaxLength(100)
             .HasColumnName("name");
 
+        builder.HasIndex(p => p.Name).IsUnique().HasFilter("\"is_active\" IS TRUE");
+
         builder.Property(p => p.Description)
             .HasMaxLength(100)
             .HasColumnName("description");

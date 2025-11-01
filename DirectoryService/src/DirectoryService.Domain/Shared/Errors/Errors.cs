@@ -28,6 +28,11 @@ public static class Errors
             return Error.Failure("save.failed", $"Failed to save entity{forId} to database");
         }
 
+        public static Error GetFailed(Guid? id = null)
+        {
+            var forId = id == null ? "" : $" for Id '{id}'";
+            return Error.Failure("get.failed", $"Failed to get entity{forId} from database");
+        }
 
         public static Error NotFound(string message) => Error.NotFound(RECORD_NOT_FOUND_CODE, message);
 
@@ -41,6 +46,12 @@ public static class Errors
         public static Error AlreadyExists() => Error.NotFound("record.already.exists", "Record already exists");
 
         public static Error Failure() => Error.Failure("failure", "failure");
+
+        public static Error DuplicatesFound(string? collectionName = null)
+        {
+            var label = collectionName == null ? "Collection" : $"Collection '{collectionName}'";
+            return Error.Validation("collection.duplicates.found", $"{label} contains duplicate elements");
+        }
     }
 
     public static class Department
