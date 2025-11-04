@@ -20,7 +20,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .HasMaxLength(NAME_MAX_LENGTH)
             .IsRequired();
 
-        builder.HasIndex(b => b.Name).IsUnique();
+        builder.HasIndex(b => b.Name).IsUnique().HasFilter("\"is_active\" IS TRUE");
+        ;
 
         builder.Property(l => l.Address)
             .HasConversion(d => d.Value, v => Address.Create(v).Value)
@@ -28,7 +29,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .HasMaxLength(ADDRESS_MAX_LENGTH)
             .IsRequired();
 
-        builder.HasIndex(b => b.Address).IsUnique();
+        builder.HasIndex(b => b.Address).IsUnique().HasFilter("\"is_active\" IS TRUE");
+        ;
 
         builder.ComplexProperty(l => l.Timezone, p =>
         {
