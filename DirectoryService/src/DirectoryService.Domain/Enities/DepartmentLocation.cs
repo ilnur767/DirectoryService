@@ -15,7 +15,6 @@ public class DepartmentLocation
     {
         DepartmentId = departmentId;
         LocationId = locationId;
-        Id = Guid.NewGuid();
     }
 
     public DepartmentLocation() { }

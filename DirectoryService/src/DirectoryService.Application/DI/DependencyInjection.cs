@@ -32,7 +32,8 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssembly(assembly);
 
-        services.Decorate(typeof(ICommandHandler<,>), typeof(CommandValidationDecorator<,>));
+        services.Decorate(typeof(ICommandHandler<,>), typeof(CommandValidationDecoratorWithResponse<,>));
+        services.Decorate(typeof(ICommandHandler<>), typeof(CommandValidationDecorator<>));
         //services.Decorate(typeof(IQueryHandler<,>), typeof(QueryValidationDecorator<,>));
 
         return services;
