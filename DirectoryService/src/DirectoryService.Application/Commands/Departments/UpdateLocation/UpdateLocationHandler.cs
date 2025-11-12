@@ -19,7 +19,6 @@ public sealed class UpdateLocationHandler : ICommandHandler<UpdateLocationComman
 
     public async Task<UnitResult<ErrorList>> Handle(UpdateLocationCommand command, CancellationToken cancellationToken)
     {
-        // проверить что существует departmentId
         var existsDepartments = await _departmentRepository.GetDepartmentById(command.DepartmentId, cancellationToken);
 
         if (existsDepartments.IsFailure)
@@ -32,7 +31,6 @@ public sealed class UpdateLocationHandler : ICommandHandler<UpdateLocationComman
             return Errors.General.NotFound(command.DepartmentId).ToErrorList();
         }
 
-        // просто что существуеют locations
         var locationsExist = await _locationRepository.CheckIfAllLocationsExist(command.LocationIds, cancellationToken);
         if (locationsExist.IsFailure)
         {
