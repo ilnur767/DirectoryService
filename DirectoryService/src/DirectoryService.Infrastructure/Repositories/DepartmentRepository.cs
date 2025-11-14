@@ -3,14 +3,22 @@ using DirectoryService.Application.Abstractions;
 using DirectoryService.Domain.Enities;
 using DirectoryService.Domain.Shared.Errors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace DirectoryService.Infrastructure.Repositories;
 
 public sealed class DepartmentRepository : IDepartmentRepository
 {
     private readonly DirectoryServiceDbContext _dbContext;
+    private readonly ILogger<DepartmentRepository> _logger;
 
-    public DepartmentRepository(DirectoryServiceDbContext dbContext) => _dbContext = dbContext;
+    public DepartmentRepository(
+        DirectoryServiceDbContext dbContext,
+        ILogger<DepartmentRepository> logger)
+    {
+        _dbContext = dbContext;
+        _logger = logger;
+    }
 
     public async Task<Result<Guid, Error>> CreateDepartment(Department department, CancellationToken cancellationToken)
     {
@@ -33,8 +41,10 @@ public sealed class DepartmentRepository : IDepartmentRepository
         try
         {
             var result =
-                await _dbContext.Departments.FirstOrDefaultAsync(d => d.Id == id && d.IsActive == true,
-                    cancellationToken);
+                await _dbContext.Departments
+                    .Include(d => d.DepartmentLocations)
+                    .FirstOrDefaultAsync(d => d.Id == id && d.IsActive == true,
+                        cancellationToken);
 
             if (result == null)
             {
@@ -68,5 +78,21 @@ public sealed class DepartmentRepository : IDepartmentRepository
         {
             return Errors.General.GetFailed();
         }
+    }
+
+    public async Task<UnitResult<Error>> Save(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Saving not completed");
+
+            return Errors.General.SaveFailed();
+        }
+
+        return UnitResult.Success<Error>();
     }
 }

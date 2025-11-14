@@ -11,7 +11,7 @@ namespace DirectoryService.Domain.Enities;
 /// </summary>
 public class Department
 {
-    private readonly List<DepartmentLocation>? _departmentLocations;
+    private List<DepartmentLocation>? _departmentLocations;
 
     private List<DepartmentPosition>? _departmentPositions;
 
@@ -92,13 +92,22 @@ public class Department
         _departmentPositions.AddRange(departmentPositions);
     }
 
-    public void AddLocation(IEnumerable<Location> locations)
+    public void AddLocations(IEnumerable<Location> locations)
     {
         var departmentLocations =
             locations.Select(l => new DepartmentLocation(this, l, Id, l.Id)).ToList();
 
         _departmentLocations.AddRange(departmentLocations);
     }
+
+    public void AddLocations(IEnumerable<Guid> locations)
+    {
+        var departmentLocations =
+            locations.Select(l => new DepartmentLocation(Id, l)).ToList();
+
+        _departmentLocations = departmentLocations.ToList();
+    }
+
 
     public void UpdateName(DepartmentName name)
     {

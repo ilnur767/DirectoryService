@@ -1,5 +1,6 @@
 ﻿using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Commands.Departments.CreateDepartment;
+using DirectoryService.Application.Commands.Departments.UpdateLocation;
 using DirectoryService.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +27,26 @@ public class DepartmentsController : ControllerBase
         }
 
         return Ok(Envelop.Ok(result.Value));
+    }
+
+    [HttpPut("{id:guid}/locations")]
+    public async Task<IActionResult> UpdateLocation(
+        [FromRoute] Guid id,
+        [FromBody] Guid[] locationIds,
+        [FromServices] ICommandHandler<UpdateLocationCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var result =
+            await handler.Handle(
+                new UpdateLocationCommand(id, locationIds),
+                cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return result.Error.ToErrorResponse();
+        }
+
+        return NoContent();
     }
 }
 
