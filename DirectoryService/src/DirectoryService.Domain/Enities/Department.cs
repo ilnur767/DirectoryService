@@ -136,7 +136,7 @@ public class Department
         return UnitResult.Success<Error>();
     }
 
-    public Result<Department, Error> ChangeParent(Department parent)
+    public Result<Department, Error> ChangeParent(Department? parent, DateTime updateAt)
     {
         if (parent == this)
         {
@@ -145,19 +145,20 @@ public class Department
 
         Parent = parent;
 
-        var depth = (short)(parent.Depth + 1);
-        Depth = depth;
+        var depth = (short)(parent == null ? 0 : parent.Depth + 1);
 
-        var path = $"{parent.Path}.{Identifier.Value}";
+        var path = parent == null ? Identifier.Value : $"{parent.Path.Value}.{Identifier.Value}";
 
         var departmentPath = DepartmentPath.Create(path);
+
         if (departmentPath.IsFailure)
         {
             return departmentPath.Error;
         }
 
+        Depth = depth;
         Path = departmentPath.Value;
-        UpdateTimestamp();
+        UpdateTimestamp(updateAt);
         return this;
     }
 
@@ -173,4 +174,5 @@ public class Department
     }
 
     private void UpdateTimestamp() => UpdatedAt = DateTime.UtcNow;
+    private void UpdateTimestamp(DateTime dateTime) => UpdatedAt = dateTime;
 }

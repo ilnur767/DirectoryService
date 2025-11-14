@@ -58,5 +58,8 @@ public static class Errors
     {
         public static Error CannotAssignSelfAsParent() => Error.NotFound("department.assign.parent",
             "Cannot assign the department as its own parent.");
+
+        public static Error CannotAssignAsAParentOrItsDescendants() => Error.Failure("department.move",
+            "A department cannot be assigned as a parent to itself or any of its descendants.");
     }
 }

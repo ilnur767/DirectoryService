@@ -38,6 +38,7 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
         {
             p.Property(x => x.Value)
                 .HasColumnName("path")
+                .HasColumnType("ltree")
                 .HasMaxLength(HIGH_MAX_LENGTH)
                 .IsRequired();
         });

@@ -2,8 +2,10 @@
 using DirectoryService.Application.Abstractions;
 using DirectoryService.Domain.Enities;
 using DirectoryService.Domain.Shared.Errors;
+using DirectoryService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace DirectoryService.Infrastructure.Repositories;
 
@@ -43,6 +45,7 @@ public sealed class DepartmentRepository : IDepartmentRepository
             var result =
                 await _dbContext.Departments
                     .Include(d => d.DepartmentLocations)
+                    .Include(d => d.Parent)
                     .FirstOrDefaultAsync(d => d.Id == id && d.IsActive == true,
                         cancellationToken);
 
@@ -94,5 +97,130 @@ public sealed class DepartmentRepository : IDepartmentRepository
         }
 
         return UnitResult.Success<Error>();
+    }
+
+    public async Task<UnitResult<Error>> UpdateChildrenPathAndDepth(Department department,
+        DepartmentPath oldPath,
+        DateTime updateAt,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            const string sql = """
+                               UPDATE departments 
+                               SET 
+                                    depth =  nlevel(@path::ltree || subpath(path, nlevel(@oldPath::ltree))) - 1,
+                                    path = @path || subpath(path, nlevel(@oldPath::ltree)),
+                                    updated_at = @updateAt
+                               WHERE id <> @id AND path <@  @oldPath::ltree
+                               """;
+
+            var parameters = new[]
+            {
+                new NpgsqlParameter("oldPath", oldPath.Value), new NpgsqlParameter("path", department.Path.Value),
+                new NpgsqlParameter("id", department.Id), new NpgsqlParameter("updateAt", updateAt)
+            };
+
+            await _dbContext.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Updating children path and depth not successful");
+            return Errors.General.Failure();
+        }
+    }
+
+    public async Task<Result<bool, Error>> IsDescendant(Guid departmentId, Guid departmentIdForCheck,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            const string sql = """
+                               SELECT 1
+                               FROM departments d
+                               WHERE path <@ (SELECT path FROM departments d WHERE d.id = @departmentId)::ltree
+                                    AND id =@departmentIdForCheck
+                               """;
+
+            var parameters = new[]
+            {
+                new NpgsqlParameter("departmentId", departmentId),
+                new NpgsqlParameter("departmentIdForCheck", departmentIdForCheck)
+            };
+
+            var result = await _dbContext.Departments
+                .FromSqlRaw(
+                    sql,
+                    parameters)
+                .AnyAsync(cancellationToken);
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Could not check department for descendants");
+            return Errors.General.Failure();
+        }
+    }
+
+    public async Task<UnitResult<Error>> LockDescendantsRecursive(Guid departmentId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            const string sql = @"
+                    WITH RECURSIVE descendants AS (
+                        SELECT d.id
+                        FROM departments d
+                        WHERE d.id = @departmentId
+
+                        UNION ALL
+
+                        SELECT c.id
+                        FROM departments c
+                        JOIN descendants p ON c.parent_id = p.id
+                    )
+                    SELECT *
+                    FROM departments d
+                    JOIN descendants ds ON d.id = ds.id
+                    WHERE d.is_active=true
+                    FOR UPDATE;";
+
+            var param = new NpgsqlParameter("departmentId", departmentId);
+
+            await _dbContext.Database.ExecuteSqlRawAsync(sql, [param], cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Locking descendants not successful");
+            return Errors.General.Failure();
+        }
+    }
+
+    public async Task<UnitResult<Error>> LockDescendantsByLtree(Guid departmentId, CancellationToken cancellationToken)
+    {
+        try
+        {
+            const string sql = @"
+                    SELECT *
+                    FROM departments d
+                    WHERE path <@ (SELECT path FROM departments d WHERE d.id = @departmentId)::ltree
+                    FOR UPDATE;";
+
+            var param = new NpgsqlParameter("departmentId", departmentId);
+
+            await _dbContext.Database.ExecuteSqlRawAsync(sql, [param], cancellationToken);
+
+            return UnitResult.Success<Error>();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Locking descendants not successful");
+            return Errors.General.Failure();
+        }
     }
 }
