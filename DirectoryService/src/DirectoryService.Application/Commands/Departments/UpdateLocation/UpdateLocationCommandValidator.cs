@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace DirectoryService.Application.Commands.Departments.UpdateLocation;
 
-public class UpdateLocationCommandValidator : AbstractValidator<UpdateLocationCommand>
+public class UpdateLocationCommandValidator : AbstractValidator<UpdateDepartmentLocationCommand>
 {
     public UpdateLocationCommandValidator()
     {

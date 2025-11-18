@@ -4,12 +4,12 @@ using DirectoryService.Domain.Shared.Errors;
 
 namespace DirectoryService.Application.Commands.Departments.UpdateLocation;
 
-public sealed class UpdateLocationHandler : ICommandHandler<UpdateLocationCommand>
+public sealed class UpdateDepartmentLocationHandler : ICommandHandler<UpdateDepartmentLocationCommand>
 {
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ILocationRepository _locationRepository;
 
-    public UpdateLocationHandler(
+    public UpdateDepartmentLocationHandler(
         IDepartmentRepository departmentRepository,
         ILocationRepository locationRepository)
     {
@@ -17,7 +17,8 @@ public sealed class UpdateLocationHandler : ICommandHandler<UpdateLocationComman
         _locationRepository = locationRepository;
     }
 
-    public async Task<UnitResult<ErrorList>> Handle(UpdateLocationCommand command, CancellationToken cancellationToken)
+    public async Task<UnitResult<ErrorList>> Handle(UpdateDepartmentLocationCommand command,
+        CancellationToken cancellationToken)
     {
         var existsDepartments = await _departmentRepository.GetDepartmentById(command.DepartmentId, cancellationToken);
 
@@ -56,4 +57,4 @@ public sealed class UpdateLocationHandler : ICommandHandler<UpdateLocationComman
     }
 }
 
-public record UpdateLocationCommand(Guid DepartmentId, Guid[] LocationIds) : ICommand;
+public record UpdateDepartmentLocationCommand(Guid DepartmentId, Guid[] LocationIds) : ICommand;

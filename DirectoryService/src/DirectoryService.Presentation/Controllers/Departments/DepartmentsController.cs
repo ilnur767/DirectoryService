@@ -34,12 +34,12 @@ public class DepartmentsController : ControllerBase
     public async Task<IActionResult> UpdateLocation(
         [FromRoute] Guid id,
         [FromBody] Guid[] locationIds,
-        [FromServices] ICommandHandler<UpdateLocationCommand> handler,
+        [FromServices] ICommandHandler<UpdateDepartmentLocationCommand> handler,
         CancellationToken cancellationToken)
     {
         var result =
             await handler.Handle(
-                new UpdateLocationCommand(id, locationIds),
+                new UpdateDepartmentLocationCommand(id, locationIds),
                 cancellationToken);
 
         if (result.IsFailure)

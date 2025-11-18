@@ -105,6 +105,8 @@ public sealed class MoveDepartmentHandler : ICommandHandler<MoveDepartmentComman
                     cancellationToken);
             if (updateChildrenResult.IsFailure)
             {
+                transactionScope.Rollback();
+
                 return updateChildrenResult.Error.ToErrorList();
             }
 

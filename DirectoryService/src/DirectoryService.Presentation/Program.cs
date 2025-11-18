@@ -51,3 +51,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+namespace DirectoryService.Presentation
+{
+    public class Program;
+}
