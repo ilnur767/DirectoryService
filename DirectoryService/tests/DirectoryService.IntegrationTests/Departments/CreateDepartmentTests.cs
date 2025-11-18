@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DirectoryService.IntegrationTests.Departments;
 
-public class CreateDepartmentWithResponseTests : CommandWithResponseTestBase<Guid, CreateDepartmentCommand>
+public class CreateDepartmentTests : CommandWithResponseTestBase<Guid, CreateDepartmentCommand>
 {
-    public CreateDepartmentWithResponseTests(DirectoryTestWebFactory factory) : base(factory)
+    public CreateDepartmentTests(DirectoryTestWebFactory factory) : base(factory)
     {
     }
 
