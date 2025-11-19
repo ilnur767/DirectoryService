@@ -12,6 +12,9 @@ public class DepartmentLocationConfiguration : IEntityTypeConfiguration<Departme
 
         builder.HasKey(x => x.Id);
 
+        builder.Property(d => d.Id)
+            .HasColumnName("id");
+
         builder.Property(x => x.DepartmentId)
             .HasColumnName("department_id")
             .IsRequired();

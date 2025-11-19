@@ -34,7 +34,7 @@ public static class DependencyInjection
 
         services.Decorate(typeof(ICommandHandler<,>), typeof(CommandValidationDecoratorWithResponse<,>));
         services.Decorate(typeof(ICommandHandler<>), typeof(CommandValidationDecorator<>));
-        //services.Decorate(typeof(IQueryHandler<,>), typeof(QueryValidationDecorator<,>));
+        services.Decorate(typeof(IQueryHandler<,>), typeof(QueryValidationDecorator<,>));
 
         return services;
     }

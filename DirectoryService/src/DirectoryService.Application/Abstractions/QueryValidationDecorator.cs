@@ -2,6 +2,7 @@
 using DirectoryService.Application.Extensions;
 using DirectoryService.Domain.Shared.Errors;
 using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DirectoryService.Application.Abstractions;
 
@@ -9,22 +10,25 @@ public class QueryValidationDecorator<TResponse, TQuery> : IQueryHandler<TRespon
     where TQuery : IQuery
 {
     private readonly IQueryHandler<TResponse, TQuery> _queryHandler;
-    private readonly IValidator<TQuery> _validator;
+    private readonly IValidator<TQuery>? _validator;
 
     public QueryValidationDecorator(
-        IValidator<TQuery> validator,
+        IServiceProvider serviceProvider,
         IQueryHandler<TResponse, TQuery> queryHandler)
     {
-        _validator = validator;
+        _validator = serviceProvider.GetService<IValidator<TQuery>>();
         _queryHandler = queryHandler;
     }
 
     public async Task<Result<TResponse, ErrorList>> Handle(TQuery command, CancellationToken cancellationToken)
     {
-        var result = await _validator.ValidateAsync(command, cancellationToken);
-        if (result.IsValid == false)
+        if (_validator != null)
         {
-            return result.ToErrorList();
+            var result = await _validator.ValidateAsync(command, cancellationToken);
+            if (!result.IsValid)
+            {
+                return result.ToErrorList();
+            }
         }
 
         return await _queryHandler.Handle(command, cancellationToken);
