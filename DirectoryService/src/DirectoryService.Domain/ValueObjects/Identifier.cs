@@ -18,7 +18,7 @@ public record Identifier
     {
         if (identifier.Length < IDENTIFIER_MIN_LENGTH || identifier.Length > IDENTIFIER_MAX_LENGTH)
         {
-            return Errors.General.ValueIsInvalid(nameof(DepartmentName));
+            return Errors.General.ValueIsInvalid(nameof(Identifier));
         }
 
         if (!Regex.IsMatch(identifier, PATTERN))
