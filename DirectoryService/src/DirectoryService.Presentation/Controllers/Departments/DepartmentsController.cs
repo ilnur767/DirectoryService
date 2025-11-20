@@ -2,6 +2,8 @@
 using DirectoryService.Application.Commands.Departments.CreateDepartment;
 using DirectoryService.Application.Commands.Departments.MoveDepartment;
 using DirectoryService.Application.Commands.Departments.UpdateLocation;
+using DirectoryService.Application.Queries.Departments.GetDepartmentsWithTopPositions;
+using DirectoryService.Contracts.Departments;
 using DirectoryService.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -68,6 +70,26 @@ public class DepartmentsController : ControllerBase
         }
 
         return NoContent();
+    }
+
+    [HttpGet("top-positions")]
+    public async Task<IActionResult> GetDepartmentsWithTopPositions(
+        [FromQuery] int? count,
+        [FromServices]
+        IQueryHandler<IReadOnlyList<DepartmentByPositionDto>, GetDepartmentsWithTopPositionsQuery> handler,
+        CancellationToken cancellationToken)
+    {
+        var result =
+            await handler.Handle(
+                new GetDepartmentsWithTopPositionsQuery(count),
+                cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return result.Error.ToErrorResponse();
+        }
+
+        return Ok(Envelop.Ok(result.Value));
     }
 }
 

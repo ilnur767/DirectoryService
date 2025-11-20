@@ -1,6 +1,6 @@
 ﻿using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Commands.Locations.CreateLocation;
-using DirectoryService.Application.Queries.GetLocations;
+using DirectoryService.Application.Queries.Locations.GetLocations;
 using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Locations;
 using DirectoryService.Presentation.Models;

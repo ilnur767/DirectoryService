@@ -7,7 +7,7 @@ using DirectoryService.Contracts.Common;
 using DirectoryService.Contracts.Locations;
 using DirectoryService.Domain.Shared.Errors;
 
-namespace DirectoryService.Application.Queries.GetLocations;
+namespace DirectoryService.Application.Queries.Locations.GetLocations;
 
 public sealed class GetLocationsHandler : IQueryHandler<PagedList<LocationDto>, GetLocationsQuery>
 {
