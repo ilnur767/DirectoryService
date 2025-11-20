@@ -1,3 +1,4 @@
+using Dapper;
 using DirectoryService.Application.DI;
 using DirectoryService.Infrastructure;
 using DirectoryService.Presentation.Middlewares;
@@ -28,6 +29,7 @@ builder.Services.AddHttpLogging(opts =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+DefaultTypeMap.MatchNamesWithUnderscores = true;
 builder.Services
     .AddInfrastructure()
     .AddApplication();

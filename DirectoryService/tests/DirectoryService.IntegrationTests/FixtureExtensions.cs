@@ -1,7 +1,7 @@
 ﻿using DirectoryService.Domain.Enities;
 using DirectoryService.Domain.ValueObjects;
 
-namespace DirectoryService.IntegrationTests.Departments;
+namespace DirectoryService.IntegrationTests;
 
 public static class FixtureExtensions
 {

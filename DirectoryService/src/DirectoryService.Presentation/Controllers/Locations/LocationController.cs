@@ -1,5 +1,8 @@
 ﻿using DirectoryService.Application.Abstractions;
 using DirectoryService.Application.Commands.Locations.CreateLocation;
+using DirectoryService.Application.Queries.GetLocations;
+using DirectoryService.Contracts.Common;
+using DirectoryService.Contracts.Locations;
 using DirectoryService.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +20,28 @@ public class LocationController : ControllerBase
     {
         var result =
             await handler.Handle(new CreateLocationCommand(location.Name, location.Address, location.TimeZone),
+                cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return result.Error.ToErrorResponse();
+        }
+
+        return Ok(Envelop.Ok(result.Value));
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchLocation(
+        [FromQuery] GetLocationsRequest request,
+        [FromServices] IQueryHandler<PagedList<LocationDto>, GetLocationsQuery> queryHandler,
+        CancellationToken cancellationToken)
+    {
+        var result =
+            await queryHandler.Handle(
+                new GetLocationsQuery(
+                    request.DepartmentIds,
+                    request.Search, request.IsActive,
+                    new PaginationRequest(request.Page, request.PageSize)),
                 cancellationToken);
 
         if (result.IsFailure)
